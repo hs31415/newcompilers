@@ -104,11 +104,13 @@ public class Lexer {
                 if(isReal){
                     syn = 21;
                     isReal = false;
+                }else if(sum == 0){
+                    syn = 22;
                 }
                 if(hasDecimalPoint){
                     token += "0."+sum;
                     if(!isReal){
-                        syn = 22;
+                        syn = 21;
                     }
                     hasDecimalPoint = false;
                 }else{
@@ -279,6 +281,9 @@ public class Lexer {
                         else{
                             throw new Exception("Quote didn't match");
                         }
+                    default:
+                        syn = -1;
+                        index++;
                 }
             }
         }
