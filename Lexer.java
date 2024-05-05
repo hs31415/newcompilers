@@ -10,6 +10,7 @@ public class Lexer {
     private String token;
     private int tag = 1;
     private boolean hasDecimalPoint = false;
+    private boolean isReal = false;
 
     public Lexer(){};
 
@@ -49,6 +50,12 @@ public class Lexer {
                             if(syn != 0){
                                 if(syn == 10){
                                     System.out.println("<" + "id" + ", " + token + ">");
+                                }else if(syn == 20){
+                                    System.out.println("<" + "INT" + ", " + token + ">");
+                                }else if(syn == 21){
+                                    System.out.println("<" + "REAL" + ", " + token + ">");
+                                }else if(syn == 22){
+                                    System.out.println("<" + "NUM" + ", " + token + ">");
                                 }
                                 else{
                                     System.out.println("<" + token + ">");
@@ -91,10 +98,18 @@ public class Lexer {
                         index ++;
                         token += sum + ".";
                         sum = 0;
+                        isReal = true;
                     }
+                }
+                if(isReal){
+                    syn = 21;
+                    isReal = false;
                 }
                 if(hasDecimalPoint){
                     token += "0."+sum;
+                    if(!isReal){
+                        syn = 22;
+                    }
                     hasDecimalPoint = false;
                 }else{
                     token += ""+sum;
