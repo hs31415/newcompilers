@@ -51,7 +51,7 @@ public class Lexer {
                     ScanLine(line, lineIndex);
                     switch(syn){
                         case -1:
-                            System.out.println(errorList.get(errorList.size() - 1));
+                            System.out.println(errorList.get(errorList.size() - 1) );
                             syn = 0;
                             break;
                         case -2:
@@ -302,7 +302,7 @@ public class Lexer {
                         }
 
                         if (syn == -1) {
-                            errorList.add("Line: " + lineIndex + " '!=' didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " '!=' didn't match.");
                         }
 
                         break;
@@ -316,7 +316,21 @@ public class Lexer {
                         }
 
                         if (syn == -1) {
-                            errorList.add("Line: " + lineIndex + " '||' didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " '||' didn't match.");
+                        }
+
+                        break;
+                    case '&':
+                        syn = -1;
+                        index++;
+                        if(index < lineLen && s.charAt(index) == '&'){
+                            syn = 52;
+                            index++;
+                            token = "&&";
+                        }
+
+                        if (syn == -1) {
+                            errorList.add("Line: " + (lineIndex + 1) + " '&&' didn't match.");
                         }
 
                         break;
@@ -331,7 +345,11 @@ public class Lexer {
                             }else{
                                 token += s.charAt(index);
                                 index++;
+                                tag = 1;
                             }
+                        }
+                        if(index == lineLen){
+                            tag = 0;
                         }
                         if(tag == 1){
                             token += s.charAt(index);
@@ -340,11 +358,11 @@ public class Lexer {
                             break;
                         }
                         else{
-                            errorList.add("Line: " + lineIndex + " Quote didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
                         }
                     default:
                         syn = -1;
-                        errorList.add("Line: " + lineIndex + " Invalid token.");
+                        errorList.add("Line: " + (lineIndex + 1) + " Invalid token.");
                         index++;
                 }
             }
