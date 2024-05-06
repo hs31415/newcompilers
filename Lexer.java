@@ -350,6 +350,7 @@ public class Lexer {
                         }
                         if(index == lineLen){
                             tag = 0;
+                            index++;
                         }
                         if(tag == 1){
                             token += s.charAt(index);
@@ -361,6 +362,7 @@ public class Lexer {
                             errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
                         }
                     default:
+                        if(index > lineLen) break;
                         syn = -1;
                         errorList.add("Line: " + (lineIndex + 1) + " Invalid token.");
                         index++;
