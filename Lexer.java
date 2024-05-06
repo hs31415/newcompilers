@@ -1,7 +1,11 @@
 import consts.ConstKeywords;
 
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+// import java.util.Stack;
 
 public class Lexer {
     private int index = 0;
@@ -11,8 +15,13 @@ public class Lexer {
     private int tag = 1;
     private boolean hasDecimalPoint = false;
     private boolean isReal = false;
+    private ArrayList<String> errorList = new ArrayList<String>();
+    private ArrayList<String> outList = new ArrayList<String>();
+    private HashSet<String> symSet = new HashSet<String>();
+    // private Stack<String> closeToken = new Stack<String>();
+    // private Stack<Integer> closeLineIndex = new Stack<Integer>();
 
-    public Lexer(){};
+    public Lexer() { };
 
     private Boolean IsDigit(char c){
         return Character.isDigit(c);
@@ -31,46 +40,91 @@ public class Lexer {
         return -1;
     }
 
-    public void GetInput(String filePath){
+    public void GetInput(String inPath, String outPath, String symPath, String errorPath){
         try{
-            Scanner sc = new Scanner(new FileReader(filePath));
+            int lineIndex = 0;
+            Scanner sc = new Scanner(new FileReader(inPath));
             while(sc.hasNextLine()){
                 String line = sc.nextLine();
                 index = 0;
                 while(index < line.length()){
-                    ScanLine(line);
+                    ScanLine(line, lineIndex);
                     switch(syn){
                         case -1:
-                            System.out.println("Error");
+                            System.out.println(errorList.get(errorList.size() - 1));
                             syn = 0;
                             break;
                         case -2:
                             break;
                         default:
                             if(syn != 0){
+                                String outString = "";
                                 if(syn == 10){
-                                    System.out.println("<" + "id" + ", " + token + ">");
+                                    outString = "<" + "id" + ", " + token + ">";
+                                    String symString = "IDENTIFIER " + token + "\n";
+                                    if (!symSet.contains(symString)) {
+                                        symSet.add(symString);
+                                    }
                                 }else if(syn == 20){
-                                    System.out.println("<" + "INT" + ", " + token + ">");
+                                    outString = "<" + "INT" + ", " + token + ">";
                                 }else if(syn == 21){
-                                    System.out.println("<" + "REAL" + ", " + token + ">");
+                                    outString = "<" + "REAL" + ", " + token + ">";
                                 }else if(syn == 22){
-                                    System.out.println("<" + "NUM" + ", " + token + ">");
+                                    outString = "<" + "NUM" + ", " + token + ">";
                                 }
                                 else{
-                                    System.out.println("<" + token + ">");
+                                    outString = " <" + token + ">";
                                 }
+                                System.out.println(outString);
+                                outList.add(outString + "\n");
                             }
                     }
                     if(index >= line.length()) break;
                 }
+                lineIndex++;
             }
+            sc.close();
+            if (errorList.size() > 0) {
+                WriteError(errorPath);
+            }
+            else {
+                WriteOut(outPath);
+                WriteSym(symPath);
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void ScanLine(String s) throws Exception {
+    private void WriteOut(String outPath) throws Exception {
+        FileWriter fw = new FileWriter(outPath);
+        for (String string : outList) {
+            fw.write(string);
+        }
+        fw.close();
+    }
+
+    private void WriteSym(String symPath) throws Exception {
+        FileWriter fw = new FileWriter(symPath);
+        for (String string : ConstKeywords.KEYWORDS) {
+            fw.write("KEYWORD " + string + "\n");
+        }
+        for (String string : symSet) {
+            fw.write(string);
+        }
+        fw.close();
+    }
+
+    private void WriteError(String errorPath) throws Exception {
+        FileWriter fw = new FileWriter(errorPath);
+        for (String string : errorList) {
+            fw.write(string);
+        }
+        fw.close();
+    }
+
+    private void ScanLine(String s, int lineIndex) throws Exception {
         final int lineLen = s.length();
         if(index > lineLen) return;
         if(s.charAt(index) == ' '){
@@ -78,7 +132,7 @@ public class Lexer {
             index++;
         }else if(s.charAt(index) == '.'){
             hasDecimalPoint = true;
-            index ++;
+            index++;
         }
         else{
             token = "";
@@ -150,71 +204,71 @@ public class Lexer {
                         index++;
                         token = "-";
                         break;
-                    case'*':
+                    case '*':
                         syn = 34;
                         index++;
                         token = "*";
                         break;
 
-                    case'/':
+                    case '/':
                         syn = 35;
                         index++;
                         token = "/";
                         break;
 
-                    case'(':
+                    case '(':
                         syn = 36;
                         index++;
                         token = "(";
                         break;
 
-                    case')':
+                    case ')':
                         syn = 37;
                         index++;
                         token = ")";
                         break;
 
-                    case'[':
+                    case '[':
                         syn = 38;
                         index++;
                         token = "[";
                         break;
 
-                    case']':
+                    case ']':
                         syn = 39;
                         index++;
                         token = "]";
                         break;
 
-                    case'{':
+                    case '{':
                         syn = 40;
                         index++;
                         token = "{";
                         break;
 
-                    case'}':
+                    case '}':
                         syn = 41;
                         index++;
                         token = "}";
                         break;
 
-                    case',':
+                    case ',':
                         syn = 42;
                         index++;
                         token = ",";
                         break;
 
-                    case':':
+                    case ':':
                         syn = 43;
                         index++;
                         token = ":";
                         break;
-                    case';':
+                    case ';':
                         syn = 44;
                         index++;
                         token = ";";
                         break;
-                    case'>':
+                    case '>':
                         syn = 45;
                         index++;
                         token = ">";
@@ -226,7 +280,7 @@ public class Lexer {
                         }
                         break;
 
-                    case'<':
+                    case '<':
                         syn = 46;
                         index++;
                         token = "<";
@@ -237,10 +291,7 @@ public class Lexer {
                             token = "<=";
                         }
                         break;
-
-
-
-                    case'!':
+                    case '!':
                         syn = -1;
                         index++;
                         if (index < lineLen && s.charAt(index) == '=')
@@ -249,6 +300,11 @@ public class Lexer {
                             index++;
                             token = "!=";
                         }
+
+                        if (syn == -1) {
+                            errorList.add("Line: " + lineIndex + " '!=' didn't match.");
+                        }
+
                         break;
                     case '|':
                         syn = -1;
@@ -258,6 +314,11 @@ public class Lexer {
                             index++;
                             token = "||";
                         }
+
+                        if (syn == -1) {
+                            errorList.add("Line: " + lineIndex + " '||' didn't match.");
+                        }
+
                         break;
                     case '"':
                         syn = -1;
@@ -279,10 +340,11 @@ public class Lexer {
                             break;
                         }
                         else{
-                            throw new Exception("Quote didn't match");
+                            errorList.add("Line: " + lineIndex + " Quote didn't match.");
                         }
                     default:
                         syn = -1;
+                        errorList.add("Line: " + lineIndex + " Invalid token.");
                         index++;
                 }
             }
