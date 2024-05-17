@@ -125,7 +125,7 @@ public class Lexer {
     private void ScanLine(String s, int lineIndex) throws Exception {
         final int lineLen = s.length();
         if(index > lineLen) return;
-        if(s.charAt(index) == ' '){
+        if(s.charAt(index) == ' '||s.charAt(index) =='\t'){
             syn = -2;
             index++;
         }else if(s.charAt(index) == '.'){
@@ -335,10 +335,10 @@ public class Lexer {
                         }
 
                         break;
-                    case '\t':
-                        syn = -1;
-                        index ++;
-                        break;
+//                    case '\t':
+//                        syn = -1;
+//                        index ++;
+//                        break;
                     case '"':
                         syn = -1;
                         token += s.charAt(index);
