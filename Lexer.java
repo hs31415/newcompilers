@@ -87,10 +87,8 @@ public class Lexer {
             if (errorList.size() > 0) {
                 WriteError(errorPath);
             }
-            else {
-                WriteOut(outPath);
-                WriteSym(symPath);
-            }
+            WriteOut(outPath);
+            WriteSym(symPath);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -303,6 +301,7 @@ public class Lexer {
 
                         if (syn == -1) {
                             errorList.add("Line: " + (lineIndex + 1) + " '!=' didn't match.");
+                            outList.add("Line: " + (lineIndex + 1) + " '!=' didn't match.");
                         }
 
                         break;
@@ -317,6 +316,7 @@ public class Lexer {
 
                         if (syn == -1) {
                             errorList.add("Line: " + (lineIndex + 1) + " '||' didn't match.");
+                            outList.add("Line: " + (lineIndex + 1) + " '||' didn't match.");
                         }
 
                         break;
@@ -331,6 +331,7 @@ public class Lexer {
 
                         if (syn == -1) {
                             errorList.add("Line: " + (lineIndex + 1) + " '&&' didn't match.");
+                            outList.add("Line: " + (lineIndex + 1) + " '&&' didn't match.");
                         }
 
                         break;
@@ -360,11 +361,13 @@ public class Lexer {
                         }
                         else{
                             errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
+                            outList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
                         }
                     default:
                         if(index > lineLen) break;
                         syn = -1;
                         errorList.add("Line: " + (lineIndex + 1) + " Invalid token.");
+                        outList.add("Line: " + (lineIndex + 1) + " Invalid token.");
                         index++;
                 }
             }
