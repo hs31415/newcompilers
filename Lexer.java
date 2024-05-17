@@ -335,6 +335,10 @@ public class Lexer {
                         }
 
                         break;
+                    case '\t':
+                        syn = -1;
+                        index ++;
+                        break;
                     case '"':
                         syn = -1;
                         token += s.charAt(index);
