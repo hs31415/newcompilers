@@ -122,6 +122,9 @@ public class Main {
         if (file.exists()) {
             // 在这里处理文件存在时的逻辑
             try {
+                // 清空文本区域
+                textArea.setText("");
+
                 // 读取文件内容并显示在文本区域中
                 FileReader reader = new FileReader(file);
                 BufferedReader br = new BufferedReader(reader);
@@ -136,4 +139,5 @@ public class Main {
             }
         }
     }
+
 }
