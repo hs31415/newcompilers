@@ -337,19 +337,19 @@ public class Lexer {
 //                        syn = -1;
 //                        index ++;
 //                        break;
+                    case '%':
+                        syn = 43;
+                        index++;
+                        token = "%";
+                        break;
                     case '"':
                         syn = -1;
                         token += s.charAt(index);
                         index++;
                         while(index < lineLen && s.charAt(index) != '"'){
-                            if(s.charAt(index) == '#'){
-                                tag = 0;
-                                break;
-                            }else{
-                                token += s.charAt(index);
-                                index++;
-                                tag = 1;
-                            }
+                            token += s.charAt(index);
+                            index++;
+                            tag = 1;
                         }
                         if(index == lineLen){
                             tag = 0;
@@ -365,19 +365,19 @@ public class Lexer {
                             errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match."+ "\n");
                             outList.add("Line: " + (lineIndex + 1) + " Quote didn't match."+ "\n");
                         }
-                    case '\'':
+                    case '\''://单引号只能声明单字符
                         syn = -1;
                         token += s.charAt(index);
                         index++;
-                        while(index < lineLen && s.charAt(index) != '\''){
-                            if(s.charAt(index) == '#'){
-                                tag = 0;
-                                break;
-                            }else{
-                                token += s.charAt(index);
-                                index++;
-                                tag = 1;
-                            }
+                        if(index<lineLen && s.charAt(index) != '\''){
+                            token += s.charAt(index);
+                            index++;
+                        }
+                        if(index<lineLen && s.charAt(index) != '\''){
+                            token += s.charAt(index);
+                            index = lineLen;
+                        }else if(s.charAt(index) == '\''){
+                            tag = 1;
                         }
                         if(index == lineLen){
                             tag = 0;

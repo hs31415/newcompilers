@@ -1,4 +1,4 @@
-char c = 'A';
+char c = 'AA';
 for (integer i = 0; i < 10; i = i + 1) {
     write(c);
 }

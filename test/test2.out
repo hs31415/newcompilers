@@ -1,8 +1,7 @@
  <char>
 <id, c>
  <=>
- <'A'>
- <;>
+Line: 1 Single Quote didn't match.
  <for>
  <(>
  <integer>
@@ -24,6 +23,8 @@
  <write>
  <(>
 <id, c>
+ <%>
+<INT, 1>
  <)>
  <;>
  <}>
