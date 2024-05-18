@@ -84,9 +84,7 @@ public class Lexer {
                 lineIndex++;
             }
             sc.close();
-            if (errorList.size() > 0) {
-                WriteError(errorPath);
-            }
+            WriteError(errorPath);
             WriteOut(outPath);
             WriteSym(symPath);
 
@@ -300,8 +298,8 @@ public class Lexer {
                         }
 
                         if (syn == -1) {
-                            errorList.add("Line: " + (lineIndex + 1) + " '!=' didn't match.");
-                            outList.add("Line: " + (lineIndex + 1) + " '!=' didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " '!=' didn't match." + "\n");
+                            outList.add("Line: " + (lineIndex + 1) + " '!=' didn't match."+ "\n");
                         }
 
                         break;
@@ -315,8 +313,8 @@ public class Lexer {
                         }
 
                         if (syn == -1) {
-                            errorList.add("Line: " + (lineIndex + 1) + " '||' didn't match.");
-                            outList.add("Line: " + (lineIndex + 1) + " '||' didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " '||' didn't match."+ "\n");
+                            outList.add("Line: " + (lineIndex + 1) + " '||' didn't match."+ "\n");
                         }
 
                         break;
@@ -330,8 +328,8 @@ public class Lexer {
                         }
 
                         if (syn == -1) {
-                            errorList.add("Line: " + (lineIndex + 1) + " '&&' didn't match.");
-                            outList.add("Line: " + (lineIndex + 1) + " '&&' didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " '&&' didn't match."+ "\n");
+                            outList.add("Line: " + (lineIndex + 1) + " '&&' didn't match."+ "\n");
                         }
 
                         break;
@@ -364,14 +362,42 @@ public class Lexer {
                             break;
                         }
                         else{
-                            errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
-                            outList.add("Line: " + (lineIndex + 1) + " Quote didn't match.");
+                            errorList.add("Line: " + (lineIndex + 1) + " Quote didn't match."+ "\n");
+                            outList.add("Line: " + (lineIndex + 1) + " Quote didn't match."+ "\n");
+                        }
+                    case '\'':
+                        syn = -1;
+                        token += s.charAt(index);
+                        index++;
+                        while(index < lineLen && s.charAt(index) != '\''){
+                            if(s.charAt(index) == '#'){
+                                tag = 0;
+                                break;
+                            }else{
+                                token += s.charAt(index);
+                                index++;
+                                tag = 1;
+                            }
+                        }
+                        if(index == lineLen){
+                            tag = 0;
+                            index++;
+                        }
+                        if(tag == 1){
+                            token += s.charAt(index);
+                            index++;
+                            syn = 60;
+                            break;
+                        }
+                        else{
+                            errorList.add("Line: " + (lineIndex + 1) + " Single Quote didn't match."+ "\n");
+                            outList.add("Line: " + (lineIndex + 1) + " Single Quote didn't match."+ "\n");
                         }
                     default:
                         if(index > lineLen) break;
                         syn = -1;
-                        errorList.add("Line: " + (lineIndex + 1) + " Invalid token.");
-                        outList.add("Line: " + (lineIndex + 1) + " Invalid token.");
+                        errorList.add("Line: " + (lineIndex + 1) + " Invalid token."+ "\n");
+                        outList.add("Line: " + (lineIndex + 1) + " Invalid token."+ "\n");
                         index++;
                 }
             }
