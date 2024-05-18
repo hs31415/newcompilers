@@ -372,6 +372,11 @@ public class Lexer {
                         if(index<lineLen && s.charAt(index) != '\''){
                             token += s.charAt(index);
                             index++;
+                        }else if(s.charAt(index) == '\''){
+                            token = "' '";
+                            index++;
+                            syn = 60;
+                            break;
                         }
                         if(index<lineLen && s.charAt(index) != '\''){
                             token += s.charAt(index);

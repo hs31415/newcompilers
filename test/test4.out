@@ -1,7 +1,12 @@
  <char>
-<id, c>
+<id, num1>
  <=>
-Line: 1 Single Quote didn't match.
+ <'1'>
+ <,>
+<id, num2>
+ <=>
+ <'2'>
+ <;>
  <for>
  <(>
  <integer>
@@ -11,7 +16,7 @@ Line: 1 Single Quote didn't match.
  <;>
 <id, i>
  <<>
-<INT, 10>
+<INT, 2>
  <;>
 <id, i>
  <=>
@@ -22,9 +27,12 @@ Line: 1 Single Quote didn't match.
  <{>
  <write>
  <(>
-<id, c>
- <%>
-<INT, 1>
+<id, num1>
+ <)>
+ <;>
+ <write>
+ <(>
+<id, num2>
  <)>
  <;>
  <}>
